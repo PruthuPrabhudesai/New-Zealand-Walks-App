@@ -50,7 +50,7 @@ namespace NZWalks.API.Repositories
         public async Task<Walk> updateAsync(Guid id, Walk walkdomainmodel)
         {
             //var existingWalk = dbContext.Walks.Find(id);
-            var existingWalk = dbContext.Walks.FirstOrDefault(x => x.Id == id);
+            var existingWalk = dbContext.Walks.FirstOrDefault(x => x.Id == id); // FirstOrDefault() is a LINQ query used to find the first entity that matches a specified condition.
             if (existingWalk == null)
             {
                 throw new InvalidOperationException("Walk not found");

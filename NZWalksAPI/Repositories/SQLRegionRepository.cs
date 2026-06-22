@@ -31,7 +31,7 @@ namespace NZWalksAPI.Repositories
 
         public async Task<Region?> UpdateAsync(Guid id, Region region)
         {
-            var existingRegion = _dbContext.Regions.Find(id);
+            var existingRegion = _dbContext.Regions.Find(id); // Find() is specifically designed to look up an entity by its primary key.
 
             if (existingRegion == null)
             {
