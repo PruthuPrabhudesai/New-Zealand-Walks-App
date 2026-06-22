@@ -21,7 +21,7 @@ namespace NZWalks.API.Data
             // Easy, Medium, Hard
             var difficulties = new List<Difficulty>()
             {
-                new Difficulty() { Id = Guid.Parse("a99aaeef-419c-45c0-ad1c-874869be0491"), Name = "Easy" },
+                new Difficulty() { Id = Guid.Parse("a99aaeef-419c-45c0-ad1c-874869be0491"), Name = "Easy" },    //Guid.Parse which converts the string into a Guid object.
                 new Difficulty() { Id = Guid.Parse("8c5a8a49-fc1f-46cd-ae4c-630db279c7cb"), Name = "Medium" },
                 new Difficulty() { Id = Guid.Parse("f155af42-d7b4-4fc7-ada3-3b312e19b5a0"), Name = "Hard" }
             };
