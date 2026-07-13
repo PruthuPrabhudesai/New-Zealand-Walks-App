@@ -18,7 +18,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-// Add Swagger with JWT Authentication
+// Add Swagger with JWT Authentication. This block says: "Tell Swagger that this API uses JWT Bearer authentication and provide a place in the Swagger UI to enter a token."
 builder.Services.AddSwaggerGen(options => 
 {
     options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
@@ -71,10 +71,10 @@ builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();
 builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 
 // This is added before Add Authentication
-builder.Services.AddIdentityCore<IdentityUser>()
+builder.Services.AddIdentityCore<IdentityUser>()    // This line allows a valid userManager object to be created inside the AuthController.cs. But keep in mind that it only registers the specific Identity services that ASP.NET Core Identity provides. And UserManager just happens to be one of them.
     .AddRoles<IdentityRole>()
     .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("NZWalks")
-    .AddEntityFrameworkStores<NZWalksAuthDbContext>()
+    .AddEntityFrameworkStores<NZWalksAuthDbContext>()       // This line is telling the Identity system to use the NZWalksAuthDbContext for storing user and role information. This is important because it allows the Identity system to persist user and role data in the database. This is the line which is used to create Identity tables inside the database after migrations.
     .AddDefaultTokenProviders();
 
 builder.Services.Configure<IdentityOptions>(options =>
@@ -88,7 +88,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 });
 
 
-// Add authentication to the services before build
+// Add authentication to the services before build. So you're saying: When a request comes in, look for a Bearer token.
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)    // comes from Microsoft.AspNetCore.Authentication.JwtBearer
     .AddJwtBearer(options =>
     {
