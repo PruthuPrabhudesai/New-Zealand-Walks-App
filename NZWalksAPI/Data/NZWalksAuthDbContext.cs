@@ -6,7 +6,7 @@ namespace NZWalksAPI.Data
 {
     public class NZWalksAuthDbContext : IdentityDbContext
     {
-        public NZWalksAuthDbContext(DbContextOptions<NZWalksAuthDbContext> options) : base(options)
+        public NZWalksAuthDbContext(DbContextOptions<NZWalksAuthDbContext> options) : base(options) // While migrating the Context word was removed implicitly. So
         {
 
         }

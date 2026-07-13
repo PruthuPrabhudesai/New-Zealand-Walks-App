@@ -41,3 +41,8 @@ namespace NZWalksAPI.Repositories
         }
     }
 }
+
+//Think of it like this:
+
+//JWT Token = The ID card
+//Claims = The information printed on the ID card
