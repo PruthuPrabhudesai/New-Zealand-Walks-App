@@ -1,14 +1,15 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using NZWalks.API.Data;
 using NZWalks.API.Repositories;
 using NZWalksAPI.Data;
 using NZWalksAPI.Mapper;
 using NZWalksAPI.Repositories;
 using System.Text;
-using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHttpContextAccessor();  // This line is added to allow the injection of IHttpContextAccessor into the TokenRepository class. This is necessary because the TokenRepository needs to access the current HTTP context to retrieve information about the authenticated user, such as their claims. By adding this line, you are registering the IHttpContextAccessor service with the dependency injection container, making it available for injection into classes that require it.
 
 // Add Swagger with JWT Authentication. This block says: "Tell Swagger that this API uses JWT Bearer authentication and provide a place in the Swagger UI to enter a token."
 builder.Services.AddSwaggerGen(options => 
@@ -69,6 +71,7 @@ builder.Services.AddAutoMapper(cfg =>
 builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
 builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();
 builder.Services.AddScoped<ITokenRepository, TokenRepository>();
+builder.Services.AddScoped<IImageRepository, LocalImageRepository>();
 
 // This is added before Add Authentication
 builder.Services.AddIdentityCore<IdentityUser>()    // This line allows a valid userManager object to be created inside the AuthController.cs. But keep in mind that it only registers the specific Identity services that ASP.NET Core Identity provides. And UserManager just happens to be one of them.
@@ -120,6 +123,16 @@ app.UseHttpsRedirection();
 app.UseAuthentication();    // This middleware will validate the token and set the user principal
 
 app.UseAuthorization();
+
+
+// UseStaticFiles adds middleware that serves static content (e.g., images, CSS, JavaScript).
+// Here, it exposes the local "Images" folder through the "/Images" request path.
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+    RequestPath = "/Images"
+});
+
 
 app.MapControllers();
 
