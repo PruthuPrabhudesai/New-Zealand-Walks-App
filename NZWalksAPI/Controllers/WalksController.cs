@@ -47,6 +47,8 @@ namespace NZWalks.API.Controllers
         {
             var walksDomainModel = await walkRepository.GetAllAsync(filterOn, filterQuery, sortBy, isAscending ?? true, pageNumber, pageSize);
 
+            throw new Exception("This is a test exception for logging purposes."); // This is just for testing the logging functionality. You can remove this line in production.
+
             // Map Domain Model to DTO
             return Ok(mapper.Map<List<WalkDto>>(walksDomainModel));
         }

@@ -10,15 +10,27 @@ using NZWalksAPI.Data;
 using NZWalksAPI.Mapper;
 using NZWalksAPI.Repositories;
 using System.Text;
+using Serilog;
+using NZWalksAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+var logger = new LoggerConfiguration()    
+    .WriteTo.Console()
+    .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day) // This line configures Serilog to write log events to a file named "log.txt" in a "logs" directory. The rollingInterval: RollingInterval.Day option means that a new log file will be created each day, and the old log files will be archived with a date suffix.
+    .MinimumLevel.Information()
+    .CreateLogger();
+
+// Supplying the logger object to the builder
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddHttpContextAccessor();  // This line is added to allow the injection of IHttpContextAccessor into the TokenRepository class. This is necessary because the TokenRepository needs to access the current HTTP context to retrieve information about the authenticated user, such as their claims. By adding this line, you are registering the IHttpContextAccessor service with the dependency injection container, making it available for injection into classes that require it.
+builder.Services.AddHttpContextAccessor();  // This was used for Image related stuff. For accessing IHttpContextAccessor inside LocalImageRepository.cs. This is needed to get the current request's scheme and host to construct the full URL for the uploaded image.
 
 // Add Swagger with JWT Authentication. This block says: "Tell Swagger that this API uses JWT Bearer authentication and provide a place in the Swagger UI to enter a token."
 builder.Services.AddSwaggerGen(options => 
@@ -115,6 +127,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 
