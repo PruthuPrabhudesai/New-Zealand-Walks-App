@@ -23,8 +23,8 @@ namespace NZWalks.API.Repositories
                 $"{image.FileName}{image.FileExtension}");
 
             // Upload Image to Local Path
-            using var stream = new FileStream(localFilePath, FileMode.Create);
-            await image.File.CopyToAsync(stream);
+            using var stream = new FileStream(localFilePath, FileMode.Create);  // FileMode.Create: Specifies that the operating system should create a new file. If the file already exists, it will be overwritten.
+            await image.File.CopyToAsync(stream);   // In this line we're copying the contents of the uploaded file (image.File) to the newly created file stream (stream). This effectively saves the uploaded file to the specified local path.
 
             var urlFilePath = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}{httpContextAccessor.HttpContext.Request.PathBase}/Images/{image.FileName}{image.FileExtension}";
 
