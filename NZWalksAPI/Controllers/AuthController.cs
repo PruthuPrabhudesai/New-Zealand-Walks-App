@@ -27,8 +27,8 @@ namespace NZWalksAPI.Controllers
         {
             var identityUser = new IdentityUser
             {
-                UserName = registerRequestDto.Username,
-                Email = registerRequestDto.Username
+                UserName = registerRequestDto.Username,     // No need to define UserName here—it is provided by IdentityUser.
+                Email = registerRequestDto.Username         // No need to define Email here-it is also provided by IdentityUser.
             };
             var identityResult = await userManager.CreateAsync(identityUser, registerRequestDto.Password);  // userManager.CreateAsync() is basically the step where you create the user record in the Identity database.
 

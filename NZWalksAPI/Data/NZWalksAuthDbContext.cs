@@ -36,6 +36,8 @@ namespace NZWalksAPI.Data
             };
 
             builder.Entity<IdentityRole>().HasData(roles);
+            // The AspNetRoles tables which has these roles is created implicitly during the migration for storing the roles. It is one of the built-in ASP.NET Core Identity tables.
+            // The AspNetUsers table is the same as AspNetRoles. It stores the users when they're registered containing attributes like ID, Username, Email, PasswordHash etc.
         }
 
     }

@@ -70,6 +70,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddDbContext<NZWalksDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// This was a part of JWT token section.
 builder.Services.AddDbContext<NZWalksAuthDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("NZWalksAuthConnectionString")));
 
@@ -86,12 +87,14 @@ builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 builder.Services.AddScoped<IImageRepository, LocalImageRepository>();
 
 // This is added before Add Authentication
+// This was a part of JWT token section.
 builder.Services.AddIdentityCore<IdentityUser>()    // This line allows a valid userManager object to be created inside the AuthController.cs. But keep in mind that it only registers the specific Identity services that ASP.NET Core Identity provides. And UserManager just happens to be one of them.
     .AddRoles<IdentityRole>()
     .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("NZWalks")
     .AddEntityFrameworkStores<NZWalksAuthDbContext>()       // This line is telling the Identity system to use the NZWalksAuthDbContext for storing user and role information. This is important because it allows the Identity system to persist user and role data in the database. This is the line which is used to create Identity tables inside the database after migrations.
     .AddDefaultTokenProviders();
 
+// This was a part of JWT token section.
 builder.Services.Configure<IdentityOptions>(options =>
 {
     options.Password.RequireDigit = false;
@@ -102,7 +105,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 1;
 });
 
-
+// This was a part of JWT token section.
 // Add authentication to the services before build. So you're saying: When a request comes in, look for a Bearer token.
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)    // comes from Microsoft.AspNetCore.Authentication.JwtBearer
     .AddJwtBearer(options =>
@@ -134,7 +137,7 @@ app.UseHttpsRedirection();
 
 // Adding authentication and authorization middleware to the pipeline
 
-app.UseAuthentication();    // This middleware will validate the token and set the user principal
+app.UseAuthentication();    // This middleware will validate the token and set the user principal. This was a part of JWT token section.
 
 app.UseAuthorization();
 
